@@ -5,6 +5,8 @@ const mongoose = require('mongoose')
 const fs = require('fs'); // Module pour gérer les fichiers
 const path = require('path'); // Module pour gérer les chemins de fichiers
 
+const baseUrl = 'https://votre-site.com';
+
 
 var functions = {
   // fonction pour ajouter les catégories
@@ -24,18 +26,32 @@ var functions = {
       });
   },
 
+  // fonction pour ajouter les produits
+  add_pro: function (req, res) {
+    const p = Produits();
+    p.nom = req.body.nom,
+      p.description = req.body.description,
+      p.prix = req.body.prix,
+      p.categorie = req.body.categorie,
+      //p.imageProd = req.file.filename,
+      //p.imageProd = `/uploads/${req.file.filename}`; 
+      p.imageProd = `${baseUrl}/uploads/${req.file.filename}`
+    p.save()
+      .then(result => {
+        console.log(result);
+        //res.redirect('/listProd')
+        //console.log('Données du produit :', result);
+        //console.log('URL de l\'image :', baseUrl + result.imageProd);
+        res.redirect('/formpro')
+      })
+      .catch(err => {
+        console.error(err);
+      });
+  },
+
   // fonction pour afficher le formulaire
   addCatForm: function (req, res) {
     res.render('addCat')
-  },
-  // fonction pour afficher les catégories
-  listeCat: function (req, res) {
-    Categories.find()
-      .then(function (doc) {
-        res.render('listCat', {
-          item: doc
-        });
-      })
   },
 
   // fonction pour afficher le formulaire
@@ -48,25 +64,17 @@ var functions = {
       })
   },
 
-  //fonction pour ajouter un produit
-  add_pro: function (req, res) {
-    const p = Produits();
-    p.nom = req.body.nom,
-      p.description = req.body.description,
-      p.prix = req.body.prix,
-      p.categorie = req.body.categorie,
-      p.imageProd = req.file.filename,
-      p.save()
-        .then(result => {
-          console.log(result);
-          //res.redirect('/listProd')
-          res.redirect('/formpro')
-        })
-        .catch(err => {
-          console.error(err);
+  // fonction pour afficher les catégories
+  listeCat: function (req, res) {
+    Categories.find()
+      .then(function (doc) {
+        res.render('listCat', {
+          item: doc
         });
+      })
   },
 
+  // fonction pour afficher les produits
   listeProd: function (req, res) {
     Produits.find()
       .populate('categorie')
@@ -78,6 +86,7 @@ var functions = {
       })
   },
 
+  // fonction pour supprimer un produit
   supprimerProduit: function (req, res) {
     const produitId = req.params.id;
 
@@ -118,62 +127,64 @@ var functions = {
       });
   },
 
+  // fonction pour supprimer une catégorie
   supprimerCategorie: function (req, res) {
     const categorieId = req.params.id;
 
     // Assurez-vous que categorieId est un ObjectID valide
     if (!mongoose.Types.ObjectId.isValid(categorieId)) {
-        return res.status(400).send('ID de catégorie invalide.');
+      return res.status(400).send('ID de catégorie invalide.');
     }
 
     // Recherchez la catégorie par son ID
     Categories.findById(categorieId)
-        .then(categorie => {
-            if (!categorie) {
-                return res.status(404).send('Catégorie non trouvée.');
-            }
+      .then(categorie => {
+        if (!categorie) {
+          return res.status(404).send('Catégorie non trouvée.');
+        }
 
-            // Supprimez l'image du dossier d'uploads (facultatif)
-            if (categorie.imageCat) {
-                const imagePath = path.join(__dirname, '../uploads', categorie.imageCat);
-                fs.unlinkSync(imagePath);
-            }
+        // Supprimez l'image du dossier d'uploads (facultatif)
+        if (categorie.imageCat) {
+          const imagePath = path.join(__dirname, '../uploads', categorie.imageCat);
+          fs.unlinkSync(imagePath);
+        }
 
-            // Supprimez les produits associés à la catégorie de la base de données
-            Produits.deleteMany({ categorie: categorieId })
-                .then(() => {
-                    console.log('Produits associés à la catégorie supprimés avec succès.');
-                    
-                    // Supprimez la catégorie de la base de données
-                    Categories.deleteOne({ _id: categorieId })
-                        .then(() => {
-                            console.log('Catégorie supprimée avec succès.');
-                            res.redirect('/listeCat'); // Redirection vers la liste des catégories après la suppression
-                        })
-                        .catch(err => {
-                            console.error('Erreur lors de la suppression de la catégorie :', err);
-                            res.redirect('/listeCat'); // Redirection en cas d'erreur
-                        });
-                })
-                .catch(err => {
-                    console.error('Erreur lors de la suppression des produits associés à la catégorie :', err);
-                    res.redirect('/listeCat'); // Redirection en cas d'erreur
-                });
-        })
-        .catch(err => {
-            console.error(err);
+        // Supprimez les produits associés à la catégorie de la base de données
+        Produits.deleteMany({ categorie: categorieId })
+          .then(() => {
+            console.log('Produits associés à la catégorie supprimés avec succès.');
+
+            // Supprimez la catégorie de la base de données
+            Categories.deleteOne({ _id: categorieId })
+              .then(() => {
+                console.log('Catégorie supprimée avec succès.');
+                res.redirect('/listeCat'); // Redirection vers la liste des catégories après la suppression
+              })
+              .catch(err => {
+                console.error('Erreur lors de la suppression de la catégorie :', err);
+                res.redirect('/listeCat'); // Redirection en cas d'erreur
+              });
+          })
+          .catch(err => {
+            console.error('Erreur lors de la suppression des produits associés à la catégorie :', err);
             res.redirect('/listeCat'); // Redirection en cas d'erreur
-        });
-},
+          });
+      })
+      .catch(err => {
+        console.error(err);
+        res.redirect('/listeCat'); // Redirection en cas d'erreur
+      });
+  },
 
-allProd: function (req, res) {
-  Categories.find()
-  .then((categ) => { res.status(200).json({ categ }); })
-  .catch((error) => { 
-    console.log(error)
-    res.status(401).json({ error: 'Invalid request!' }); 
-  }); 
-}
+  // tous les produits
+  allProd: function (req, res) {
+    Categories.find()
+      .then((categ) => { res.status(200).json({ categ }); })
+      .catch((error) => {
+        console.log(error)
+        res.status(401).json({ error: 'Invalid request!' });
+      });
+  }
 
 
 
