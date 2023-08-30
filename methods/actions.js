@@ -4,6 +4,7 @@ var config = require('../config/dbconfig');
 const mongoose = require('mongoose')
 const fs = require('fs'); // Module pour gérer les fichiers
 const path = require('path'); // Module pour gérer les chemins de fichiers
+const { error } = require('console');
 
 const baseUrl = 'https://votre-site.com';
 
@@ -14,7 +15,8 @@ var functions = {
     const x = Categories();
     x.nomCat = req.body.nomCat,
       x.descriptionCat = req.body.descriptionCat,
-      x.imageCat = req.file.filename
+      //x.imageCat = req.file.filename
+      x.imageCat = `${baseUrl}/uploads/${req.file.filename}`
     x.save()
       .then(result => {
         console.log(result);
@@ -178,12 +180,22 @@ var functions = {
 
   // tous les produits
   allProd: function (req, res) {
+    Produits.find()
+      .then((prod) => { res.status(200).json({ prod }); })
+      .catch((error) => {
+        console.log(error)
+        res.status(401).json({ error: 'Invalid request for categories' });
+      });
+  },
+
+  // tous les categories
+  allCat: function (req, res) {
     Categories.find()
       .then((categ) => { res.status(200).json({ categ }); })
       .catch((error) => {
         console.log(error)
-        res.status(401).json({ error: 'Invalid request!' });
-      });
+        res.status(401).json({ error: 'Invalid request for produits' })
+      })
   }
 
 

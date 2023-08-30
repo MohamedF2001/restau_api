@@ -13,30 +13,30 @@ if (!fs.existsSync(uploadDir)) {
 
 var upload = multer({
   storage: multer.diskStorage({
-    destination:(req,file,cb)=>{
-      cb(null,uploadDir);
+    destination: (req, file, cb) => {
+      cb(null, uploadDir);
     },
-    filename: function(req,file,callback) {
-      callback(null,file.fieldname + '-' +Date.now() + path.extname(file.originalname))
+    filename: function (req, file, callback) {
+      callback(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname))
     }
   })
 })
 
 router.get('/', (req, res) => {
-    res.send('Hello World')
+  res.send('Hello World')
 })
 
 //@route POST /addCat
 //router.post('/addCat', actions.addCat)
-router.post('/post',upload.single('imageCat'),actions.add_cat)
+router.post('/post', upload.single('imageCat'), actions.add_cat)
 
 router.get('/formcat', actions.addCatForm)
 
 router.get('/listeCat', actions.listeCat)
 
-router.get('/formpro',actions.addProdForm)
+router.get('/formpro', actions.addProdForm)
 
-router.post('/ajouter_produit' ,upload.single('imageProd'), actions.add_pro)
+router.post('/ajouter_produit', upload.single('imageProd'), actions.add_pro)
 
 router.get('/listProd', actions.listeProd)
 
@@ -45,6 +45,8 @@ router.post('/supprimer/:id', actions.supprimerProduit);
 router.post('/supprimercategorie/:id', actions.supprimerCategorie);
 
 router.get('/allprod', actions.allProd)
+
+router.get('/allcat', actions.allCat)
 
 module.exports = router
 
