@@ -181,7 +181,10 @@ var functions = {
   // tous les produits
   allProd: function (req, res) {
     Produits.find()
-      .then((prod) => { res.status(200).json({ prod }); })
+      //.then((prod) => { res.status(200).json({ prod }); })
+      .then((produits) => {
+        res.status(200).json(produits);
+      })
       .catch((error) => {
         console.log(error)
         res.status(401).json({ error: 'Invalid request for categories' });
@@ -191,7 +194,10 @@ var functions = {
   // tous les categories
   allCat: function (req, res) {
     Categories.find()
-      .then((categ) => { res.status(200).json({ categ }); })
+      //.then((categ) => { res.status(200).json({ categ }); })
+      .then((categories) => {
+        res.status(200).json(categories);
+      })
       .catch((error) => {
         console.log(error)
         res.status(401).json({ error: 'Invalid request for produits' })
