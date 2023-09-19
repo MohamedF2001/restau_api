@@ -6,7 +6,9 @@ const fs = require('fs'); // Module pour gérer les fichiers
 const path = require('path'); // Module pour gérer les chemins de fichiers
 const { error } = require('console');
 
-const baseUrl = 'https://votre-site.com';
+
+
+const baseUrl = 'https://restauapi.adaptable.app/';
 
 
 var functions = {
@@ -203,9 +205,6 @@ var functions = {
         res.status(401).json({ error: 'Invalid request for produits' })
       })
   }
-
-
-
 }
 
 module.exports = functions
