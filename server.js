@@ -13,11 +13,13 @@ const cat = require('./models/categorie')
 connectDB()
 
 app.use(cors())
-app.use(bodyParser.urlencoded({ extended: false}))
-app.use(bodyParser.json())
+app.use("/uploads",express.static(__dirname+"/uploads"));
+//app.use(bodyParser.urlencoded({ extended: false}))
+//app.use(bodyParser.json())
+app.use(express.json());
 
 app.set('view engine', 'ejs');
-app.use(express.static('uploads'));
+
 app.use(routes)
 
 const uploadDir = './uploads';
