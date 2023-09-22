@@ -18,7 +18,7 @@ var functions = {
     x.nomCat = req.body.nomCat,
       x.descriptionCat = req.body.descriptionCat,
       //x.imageCat = req.file.filename
-      x.imageCat = `${baseUrl}uploads/${req.file.filename}`
+      x.imageCat = `${baseUrl}/uploads/${req.file.filename}`
     x.save()
       .then(result => {
         console.log(result);
