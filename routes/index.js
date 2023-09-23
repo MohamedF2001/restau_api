@@ -40,6 +40,8 @@ router.post('/ajouter_produit', upload.single('imageProd'), actions.add_pro)
 
 router.get('/listProd', actions.listeProd)
 
+router.get('/listProByCat/:categoryId', actions.listeProdByCat)
+
 router.post('/supprimer/:id', actions.supprimerProduit);
 
 router.post('/supprimercategorie/:id', actions.supprimerCategorie);
@@ -47,6 +49,8 @@ router.post('/supprimercategorie/:id', actions.supprimerCategorie);
 router.get('/allprod', actions.allProd)
 
 router.get('/allcat', actions.allCat)
+
+router.get('/allprodbycat/:categorieId', actions.allProdByCat)
 
 module.exports = router
 

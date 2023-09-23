@@ -90,6 +90,24 @@ var functions = {
       })
   },
 
+  // fonction pour afficher les produits par catégories
+  listeProdByCat: function (req, res) {
+    const categoryId = req.params.categoryId; // Supposons que vous passez l'ID de la catégorie via l'URL
+
+    Produits.find({ categorie: categoryId }) // Recherche les produits de la catégorie spécifiée
+      .populate('categorie') // Charge les informations de catégorie pour chaque produit
+      .then(function (doc) {
+        res.render('listProd', {
+          itemm: doc,
+          i: doc,
+        });
+      })
+      .catch(function (error) {
+        // Gérer les erreurs ici, par exemple, catégorie introuvable
+        res.status(500).send('Erreur lors de la récupération des produits.');
+      });
+  },
+
   // fonction pour supprimer un produit
   supprimerProduit: function (req, res) {
     const produitId = req.params.id;
@@ -189,7 +207,21 @@ var functions = {
       })
       .catch((error) => {
         console.log(error)
-        res.status(401).json({ error: 'Invalid request for categories' });
+        res.status(401).json({ error: 'Invalid request for produits' });
+      });
+  },
+
+  // tous les produits par Catégorie
+  allProdByCat: function (req, res) {
+    const categorieId = req.params.categorieId;
+    Produits.find({categorie: categorieId})
+      //.then((prod) => { res.status(200).json({ prod }); })
+      .then((produits) => {
+        res.status(200).json(produits);
+      })
+      .catch((error) => {
+        console.log(error)
+        res.status(401).json({ error: 'Invalid request for produits' });
       });
   },
 
@@ -202,7 +234,7 @@ var functions = {
       })
       .catch((error) => {
         console.log(error)
-        res.status(401).json({ error: 'Invalid request for produits' })
+        res.status(401).json({ error: 'Invalid request for categorie' })
       })
   }
 }
