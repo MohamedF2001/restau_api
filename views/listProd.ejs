@@ -22,6 +22,8 @@
                         <th>Description</th>
                         <th>Prix</th>
                         <th>Categorie</th>
+                        <th>Quantite</th>
+                        <th>Dans le panier</th>
                         <th>Image</th>
                         <th>Actions</th>
                     </tr>
@@ -40,6 +42,12 @@
                             </td>
                             <td>
                                 <%= itemm.categorie.nomCat %>
+                            </td>
+                            <td>
+                                <%= itemm.quantite %>
+                            </td>
+                            <td>
+                                <%= itemm.qtePanier %>
                             </td>
                             <td><img src="<%= itemm.imageProd %>" width="50" height="50"></td>
                             <td>

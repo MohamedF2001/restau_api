@@ -37,6 +37,8 @@ var functions = {
       p.description = req.body.description,
       p.prix = req.body.prix,
       p.categorie = req.body.categorie,
+      p.quantite = req.body.quantite,
+      p.qtePanier = req.body.qtePanier,
       //p.imageProd = req.file.filename,
       //p.imageProd = `/uploads/${req.file.filename}`; 
       p.imageProd = `${baseUrl}/uploads/${req.file.filename}`
@@ -214,7 +216,7 @@ var functions = {
   // tous les produits par Catégorie
   allProdByCat: function (req, res) {
     const categorieId = req.params.categorieId;
-    Produits.find({categorie: categorieId})
+    Produits.find({ categorie: categorieId })
       //.then((prod) => { res.status(200).json({ prod }); })
       .then((produits) => {
         res.status(200).json(produits);

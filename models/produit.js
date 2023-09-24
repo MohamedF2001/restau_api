@@ -22,6 +22,14 @@ const produitSchema = new Schema({
   imageProd: {
     type: String,
     required: true
+  },
+  quantite: {
+    type: Number,
+    required: false
+  },
+  qtePanier: {
+    type: Number,
+    required: false
   }
 });
 

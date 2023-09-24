@@ -29,6 +29,16 @@
         </div>
 
         <div class="mb-3">
+            <label for="Quantite" class="form-label">Quantite disponible :</label>
+            <input type="text" name="quantite" id="quantite" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+            <!-- <label for="qtePanier" class="form-label">Quantite panier : Mettez 1 par défaut </label> -->
+            <input type="hidden" name="qtePanier" id="qtePanier" class="form-control" value="1" required>
+        </div>
+
+        <div class="mb-3">
             <label for="categorie" class="form-label">Catégorie :</label>
             <select name="categorie" id="categorie" class="form-control" required>
                 <% categories.forEach(function(categorie) { %>
